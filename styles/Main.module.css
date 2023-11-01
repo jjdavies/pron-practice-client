@@ -1,0 +1,381 @@
+.container {
+  display: flex;
+  overflow: hidden;
+}
+
+.main {
+  background: url('../img/rainbow.webp');
+  background-size: cover;
+  height: 100vh;
+  position: absolute;
+  left: 15%;
+  margin-left: 10px;
+  width: 82%;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  overflow-y: scroll;
+}
+
+.activityCards {
+  margin: 5px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.groupCard {
+  margin: 5px 0;
+  border: 2px solid black;
+  border-left: 5px solid;
+  background: lightcyan;
+  /* background: linear-gradient(#eee, rgba(200, 200, 200, 0.8)); */
+  border-radius: 20px;
+  color: black;
+  width: 200px;
+  height: 200px;
+  filter: drop-shadow(1px 1px 1px rgba(100, 100, 100, 0.2));
+}
+
+.groupTitle {
+  padding: 5px 10px;
+  font-size: large;
+}
+
+.player {
+  background: url('../img/rainbow.webp');
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+}
+
+.playerTitle {
+  display: flex;
+  padding: 10px 0;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 3rem;
+}
+
+.optionsContainer {
+  margin: 20px auto;
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: visible;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  width: 30%;
+  height: 300px;
+  border-radius: 20px;
+  filter: drop-shadow(1px 1px 3px gray);
+  transition: background 0.2s ease-in;
+}
+
+.audioContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.audioButton {
+  background: white;
+  width: 30%;
+  height: 100%;
+  border-radius: 20px;
+  filter: drop-shadow(2px 2px 1px black);
+  transition: background 0.2s ease-in;
+}
+
+.formGroup {
+  background-color: snow;
+  width: 60%;
+  margin: 10px auto;
+  border: 1px solid blue;
+  padding: 5px;
+  font-size: 20px;
+}
+
+.formButton {
+  margin: 10px 5px;
+  padding: 5px;
+  height: 50px;
+  background: lightgreen;
+  font-size: 20px;
+  filter: drop-shadow(2px 2px 2px black);
+}
+
+.textInput {
+  height: 40px;
+  width: 30%;
+  font-size: 20px;
+}
+
+.nameTextInput {
+  height: 30px;
+  width: 80%;
+  font-size: 15px;
+}
+
+.audioFileInput {
+  display: flex;
+  justify-content: center;
+  margin: 10%;
+  align-items: center;
+  width: 300px;
+  height: 60%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px dashed black;
+}
+
+.optionFileInput {
+  display: flex;
+  justify-content: center;
+  border: 2px dashed black;
+  height: 100px;
+}
+
+.addOptionButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-radius: 25px;
+  width: 60px;
+  height: 60px;
+  font-size: 40px;
+  filter: drop-shadow(1px 1px 3px gray);
+}
+
+.navContainer {
+  position: absolute;
+  bottom: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navBox {
+  background: white;
+  height: 80%;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+}
+
+.cardButtons {
+  display: flex;
+  width: 40%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deleteButton {
+  display: flex;
+  margin: 15px 0;
+  background: pink;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  width: 70%;
+  height: 30px;
+  font-size: 20px;
+  filter: drop-shadow(2px 2px 2px black);
+}
+
+.startButton {
+  display: flex;
+  background: lightgreen;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  width: 100%;
+  height: 40px;
+  font-size: 20px;
+  filter: drop-shadow(2px 2px 2px black);
+}
+
+.userModal {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+.userTitle {
+  margin: 20px 10px;
+  font-size: 30px;
+  color: white;
+  text-align: left;
+}
+
+.users {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  color: black;
+}
+
+.userAvatar {
+  margin: 3px 3px;
+  padding-top: 10px;
+  width: 200px;
+  height: 220px;
+  background: white;
+  text-align: center;
+  border-radius: 20px;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px auto;
+  background: white;
+  width: 40%;
+  height: 70vh;
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 35px;
+}
+
+.tick {
+  width: 80%;
+  height: auto;
+}
+
+.userName {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.crossDelete {
+  display: flex;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  content: 'x';
+  margin: auto;
+  background: white;
+  border-radius: 50%;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
+  text-align: center;
+}
+
+.completedSessionsContainer {
+  margin: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.completedSessionCard {
+  margin: 4px;
+  width: 300px;
+  height: 300px;
+  background: white;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
+  text-align: center;
+  cursor: pointer;
+}
+
+.completedSessionDate {
+  margin: 3px;
+  font-weight: bold;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.completedSessionText {
+  margin: 1px;
+  font-size: 20px;
+}
+
+.resultsBoxes {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 90%;
+  justify-content: center;
+}
+
+.resultBox {
+  margin: 1px;
+  width: 30px;
+  height: 30px;
+}
+
+.sessionFilterMenu {
+  display: flex;
+  height: 50px;
+  width: 100%;
+  background: snow;
+  padding: 5px;
+}
+
+.sessionFilterButton {
+  background: snow;
+  border: 1px solid black;
+  padding: 0 4px;
+  margin: 0 4px;
+  min-width: 60px;
+  width: fit-content;
+  height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sparkleContainer {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  animation: growAndShrink 600ms ease-in-out forwards;
+}
+
+.sparkle {
+  animation: spin 600ms linear forwards;
+}
+
+@keyframes growAndShrink {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}

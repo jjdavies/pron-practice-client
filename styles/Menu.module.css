@@ -1,0 +1,120 @@
+.sideMenuContainer,
+.sideMenuSlide {
+  /* max-width: 300px; */
+  /* min-width: 250px; */
+  height: 100vh;
+  background: snow;
+  filter: drop-shadow(2px 5px 5px lightblue);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+  width: 15%;
+  transition: transform 0.5s ease-out;
+}
+
+/* Phones */
+@media screen and (max-width: 600px) {
+  .sideMenuContainer {
+    display: none;
+  }
+  .sideMenuSlide {
+    display: block;
+    /* width: 60%; */
+  }
+}
+/* Tablet */
+@media screen and (min-width: 600px) {
+  .sideMenuContainer {
+    display: block;
+  }
+  .sideMenuSlide {
+    display: none;
+  }
+}
+
+/* @media only screen and (min-width: 768px) {
+  .sideMenuContainer {
+    width: 30%;
+  }
+} */
+
+.button {
+  width: 50px;
+  height: 50px;
+  margin: 20px;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 35px;
+  height: 5px;
+  background-color: #000;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+.dark {
+  background: black;
+}
+
+.triangleLeft {
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-right: 40px solid #555;
+  border-bottom: 20px solid transparent;
+}
+
+/* Rotate first bar */
+.change .bar1 {
+  transform: translate(0, 11px) rotate(-45deg);
+}
+
+/* Fade out the second bar */
+.change .bar2 {
+  opacity: 0;
+}
+
+/* Rotate last bar */
+.change .bar3 {
+  transform: translate(0, -11px) rotate(45deg);
+}
+
+.buttonContainer {
+  clear: both;
+  width: 100%;
+  height: 50px;
+}
+
+.nav {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+}
+
+.navItem {
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 4px;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  text-align: center;
+  background: white;
+  border-radius: 20px;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+  user-select: none;
+  text-decoration: none;
+}
+
+.navItem:active {
+  background-color: #555;
+  color: #fff;
+}
+
+.navItem:visited {
+  text-decoration: none;
+}
