@@ -1,14 +1,15 @@
 'use client';
 import { ReactNode, useState, createContext } from 'react';
 import { ActivityGroup } from '../interface/ActivityGroup';
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Activity } from '../interface/Activity';
 import { Option } from '../interface/Option';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { User } from '../interface/User';
-import { UserSessionSelection } from '../interface/UserSessionSelection';
+// import { UserSessionSelection } from '../interface/UserSessionSelection';
 import { UserSession } from '../interface/UserSession';
+import { CompletedSession } from '../interface/CompletedSession';
 
 interface DataProviderState {
   currentActivityGroup: string;
@@ -39,7 +40,7 @@ interface DataProviderState {
   updateSession: Function;
   recordSelection: Function;
   currentSession: UserSession;
-  completedSessions: [];
+  completedSessions: CompletedSession[];
   loadCompletedSessions: Function;
   uploadSessionData: Function;
   createNewUser: Function;
@@ -76,17 +77,18 @@ export function DataProvider({ children }: DataProviderProps) {
   const [completedSessions, setCompletedSessions] = useState([]);
 
   const loadActivityGroups = () => {
-    axios.get('/activity/group/all').then((res, err) => {
-      setActivityGroups(res.data);
-    });
-    axios.get('/user').then((res, err) => {
-      if (err) console.log(err);
+    axios
+      .get('/activity/group/all')
+      .then((res: AxiosResponse<any>) => {
+        setActivityGroups(res.data);
+      });
+    axios.get('/user').then((res) => {
       setUserThumbs(res.data);
     });
   };
 
   const selectCurrentActivityGroup = async (uuid: string) => {
-    axios.get(`/activity/all/${uuid}`).then((res, err) => {
+    axios.get(`/activity/all/${uuid}`).then((res) => {
       // console.log(res.data);
       if (res.data.length === 0) return setCurrentActivityGroup(uuid);
       const uuids = activities.map((act) => {
@@ -103,12 +105,9 @@ export function DataProvider({ children }: DataProviderProps) {
           return act.options;
         })
         .flat();
-      axios
-        .post('/option/multi', { optionUUIDs })
-        .then((res, err) => {
-          if (err) console.log(err);
-          setOptions(res.data);
-        });
+      axios.post('/option/multi', { optionUUIDs }).then((res) => {
+        setOptions(res.data);
+      });
       console.log(uuids, ...optionUUIDs);
       setActivities([
         ...activities,
@@ -117,7 +116,8 @@ export function DataProvider({ children }: DataProviderProps) {
         ),
       ]);
       setCurrentActivity(
-        res.data.filter((act) => act.preceding === '')[0].uuid
+        res.data.filter((act: Activity) => act.preceding === '')[0]
+          .uuid
       );
     });
     setCurrentActivityGroup(uuid);
@@ -187,74 +187,67 @@ export function DataProvider({ children }: DataProviderProps) {
     // setPendingActivityData(name);
     setNewDesignPending(true);
     //make two new options (as a minimum)
-    axios.get('/option/new/2').then((optRes, err) => {
-      if (err) console.log(err);
+    axios.get('/option/new/2').then((optRes) => {
       console.log(
         'options resdata ',
         optRes.data,
-        optRes.data.map((opt) => opt.uuid)
+        optRes.data.map((opt: Option) => opt.uuid)
       );
       //make a new activity
       const activityData = {
-        options: optRes.data.map((opt) => opt.uuid),
+        options: optRes.data.map((opt: Option) => opt.uuid),
         title: '',
       };
       console.log(activityData);
-      axios.post('/activity', activityData).then((actRes, err) => {
-        if (err) console.log(err);
-
+      axios.post('/activity', activityData).then((actRes) => {
         //set group
         const groupData = {
           title: name,
           activities: [actRes.data.uuid],
         };
-        axios
-          .post('/activity/setgroup', groupData)
-          .then((res, err) => {
-            if (err) console.log(err);
-            console.log('group', res.data);
+        axios.post('/activity/setgroup', groupData).then((res) => {
+          console.log('group', res.data);
 
-            setActivityGroups([
-              ...activityGroups.filter(
-                (group: ActivityGroup) => group.uuid !== res.data.uuid
-              ),
-              res.data,
-            ]);
-            setCurrentActivityGroup(res.data.uuid);
-            console.log([
-              ...activities.filter(
-                (act) => act.uuid !== actRes.data.uuid
-              ),
-              actRes.data,
-            ]);
-            setActivities([
-              ...activities.filter(
-                (act) => act.uuid !== actRes.data.uuid
-              ),
-              actRes.data,
-            ]);
-            setCurrentActivity(actRes.data.uuid);
+          setActivityGroups([
+            ...activityGroups.filter(
+              (group: ActivityGroup) => group.uuid !== res.data.uuid
+            ),
+            res.data,
+          ]);
+          setCurrentActivityGroup(res.data.uuid);
+          console.log([
+            ...activities.filter(
+              (act) => act.uuid !== actRes.data.uuid
+            ),
+            actRes.data,
+          ]);
+          setActivities([
+            ...activities.filter(
+              (act) => act.uuid !== actRes.data.uuid
+            ),
+            actRes.data,
+          ]);
+          setCurrentActivity(actRes.data.uuid);
 
-            console.log('setting data options', [
-              ...options.filter(
-                (opt) => opt.uuid !== optRes.data.uuid
-              ),
-              ...optRes.data,
-            ]);
-            console.log(optRes.data);
-            setOptions([
-              ...options.filter(
-                (opt) => opt.uuid !== optRes.data.uuid
-              ),
-              ...optRes.data,
-            ]);
-            setNewDesignPending(false);
-          });
+          console.log('setting data options', [
+            ...options.filter((opt) => opt.uuid !== optRes.data.uuid),
+            ...optRes.data,
+          ]);
+          console.log(optRes.data);
+          setOptions([
+            ...options.filter((opt) => opt.uuid !== optRes.data.uuid),
+            ...optRes.data,
+          ]);
+          setNewDesignPending(false);
+        });
       });
     });
   };
 
-  const changeTitle = (actID: string, e: Event) => {
+  const changeTitle = (
+    actID: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setActivities(
       activities.map((act) => {
         if (act.uuid === actID) {
@@ -282,8 +275,7 @@ export function DataProvider({ children }: DataProviderProps) {
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then((res, err) => {
-          if (err) console.log(err);
+        .then((res) => {
           console.log(
             activities.map((act) => {
               if (act.uuid === activityID) {
@@ -323,8 +315,7 @@ export function DataProvider({ children }: DataProviderProps) {
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then((res, err) => {
-          if (err) console.log(err);
+        .then((res) => {
           console.log(
             activities.map((act) => {
               if (act.uuid === optionID) {
@@ -352,19 +343,16 @@ export function DataProvider({ children }: DataProviderProps) {
   };
 
   const setOptionCorrect = (uuid: string, value: boolean) => {
-    axios
-      .post('/option', { uuid, correct: value })
-      .then((res, err) => {
-        if (err) console.log(err);
-        setOptions(
-          options.map((opt) => {
-            if (opt.uuid === uuid) {
-              return res.data;
-            }
-            return opt;
-          })
-        );
-      });
+    axios.post('/option', { uuid, correct: value }).then((res) => {
+      setOptions(
+        options.map((opt) => {
+          if (opt.uuid === uuid) {
+            return res.data;
+          }
+          return opt;
+        })
+      );
+    });
   };
 
   const addOption = (uuid: string) => {
@@ -382,15 +370,13 @@ export function DataProvider({ children }: DataProviderProps) {
       (actOptUUID) => !precedings.includes(actOptUUID)
     )[0];
     console.log(preceding);
-    axios.post('/option', { preceding }).then((optRes, err) => {
-      if (err) console.log(err);
+    axios.post('/option', { preceding }).then((optRes) => {
       axios
         .post('/activity', {
           uuid,
           options: [...addToActivity.options, optRes.data.uuid],
         })
-        .then((res, err) => {
-          if (err) console.log(err);
+        .then((res) => {
           console.log([...options, optRes.data]);
           setOptions([...options, optRes.data]);
           setActivities(
@@ -420,7 +406,7 @@ export function DataProvider({ children }: DataProviderProps) {
     const newOptionsPost = await axios.get('/option/new/2');
     //make a new activity
     const activityData = {
-      options: newOptionsPost.data.map((opt) => opt.uuid),
+      options: newOptionsPost.data.map((opt: Option) => opt.uuid),
       preceding: uuid,
     };
     const newActivityPost = await axios.post(
@@ -510,15 +496,14 @@ export function DataProvider({ children }: DataProviderProps) {
           uuid: currentNextActivity.uuid,
           preceding: newActUUID,
         })
-        .then((res, err) => {
+        .then((res) => {
           resolve(res.data);
         });
     });
   };
 
   const addActivityOld = async (uuid: string) => {
-    axios.get('/option/new/2').then((optRes, err) => {
-      if (err) console.log(err);
+    axios.get('/option/new/2').then((optRes) => {
       const currentNextActivity = activities.filter(
         (act) => act.preceding === uuid
       )[0];
@@ -528,8 +513,7 @@ export function DataProvider({ children }: DataProviderProps) {
         options: optRes.data,
         preceding: uuid,
       };
-      axios.post('/activity', activityData).then((actRes, err) => {
-        if (err) console.log(err);
+      axios.post('/activity', activityData).then((actRes) => {
         //set group
         const group: ActivityGroup = activityGroups.filter(
           (grp: ActivityGroup) => grp.uuid === currentActivityGroup
@@ -540,16 +524,14 @@ export function DataProvider({ children }: DataProviderProps) {
         };
         axios
           .post('/activity/setgroup', groupData)
-          .then((groupRes, err) => {
-            if (err) console.log(err);
+          .then((groupRes) => {
             //alter next activity to change the preceding value to the new activity
             axios
               .post('/activity', {
                 uuid: currentNextActivity.uuid,
                 preceding: actRes.data.uuid,
               })
-              .then((alterActRes, err) => {
-                if (err) console.log(err);
+              .then((alterActRes) => {
                 setActivityGroups([
                   ...activityGroups.filter(
                     (group: ActivityGroup) =>
@@ -603,8 +585,7 @@ export function DataProvider({ children }: DataProviderProps) {
   };
 
   const deleteGroup = (uuid: string) => {
-    axios.delete(`/activity/group/${uuid}`).then((res, err) => {
-      if (err) console.log(err);
+    axios.delete(`/activity/group/${uuid}`).then((res) => {
       activityGroups.filter((group) => group.uuid !== uuid);
       loadActivityGroups();
     });

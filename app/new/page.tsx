@@ -10,7 +10,7 @@ export default function Page() {
   const { handlePendingActivityData, cancelNewActivity } =
     useContext(DataContext);
 
-  const setName = (e) => {
+  const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewGroupName(e.target.value);
   };
 
@@ -39,7 +39,7 @@ export default function Page() {
           <button
             className={mainStyle.formButton}
             style={{ background: 'pink' }}
-            onClick={cancelNewActivity}
+            onClick={() => cancelNewActivity}
           >
             Cancel
           </button>

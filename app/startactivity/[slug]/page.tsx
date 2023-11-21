@@ -4,6 +4,8 @@ import React, {
   useEffect,
   useState,
   useRef,
+  CSSProperties,
+  ReactNode,
 } from 'react';
 import { color, motion } from 'framer-motion';
 import mainStyle from '../../../styles/Main.module.css';
@@ -13,24 +15,29 @@ import Image from 'next/image';
 import useSound from 'use-sound';
 import { v4 as uuidv4 } from 'uuid';
 import BlankAvatarImage from '../../../img/blankavatar.jpg';
-import Option from '../../../interface/Option';
+import { Option } from '../../../interface/Option';
 
 // import success from '../../../public/success.mp3';
 // import click from '../../../public/click.mp3';
 
 import AudioIcon from '../../../img/sound.svg';
+import { Color } from 'sharp';
 
 interface AudioCompProps {
   file: string;
 }
 
-const random = (min, max) =>
+const random = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min)) + min;
 
 const DEFAULT_COLOR = '#FFDF00';
 
-const useRandomInterval = (callback, minDelay, maxDelay) => {
-  const timeoutId = React.useRef(null);
+const useRandomInterval = (
+  callback: Function,
+  minDelay: number,
+  maxDelay: number
+) => {
+  const timeoutId = React.useRef<number>();
   const savedCallback = React.useRef(callback);
   React.useEffect(() => {
     savedCallback.current = callback;
@@ -56,7 +63,15 @@ const useRandomInterval = (callback, minDelay, maxDelay) => {
   return cancel;
 };
 
-const generateSparkle = (color) => {
+interface SparkleType {
+  createdAt: number;
+  id: string;
+  color: string;
+  size: number;
+  style: React.CSSProperties;
+}
+
+const generateSparkle = (color: string): SparkleType => {
   const sparkle = {
     id: uuidv4(),
     createdAt: Date.now(),
@@ -71,20 +86,27 @@ const generateSparkle = (color) => {
   return sparkle;
 };
 
-const Sparkles = ({ color = DEFAULT_COLOR, children }) => {
-  const [sparkles, setSparkles] = useState([]);
+interface SparklesType {
+  color: string;
+  children: ReactNode;
+}
+
+function Sparkles(children: any) {
+  const [sparkles, setSparkles] = useState<SparkleType[]>([]);
 
   useRandomInterval(
     () => {
-      const sparkle = generateSparkle(color);
+      const sparkle = generateSparkle(DEFAULT_COLOR);
       const now = Date.now();
 
-      const nextSparkles = sparkles.filter((sparkle) => {
-        const delta = now - sparkle.createdAt;
-        console.log(delta);
-        return delta < 1000;
-        // return true;
-      });
+      const nextSparkles: SparkleType[] = sparkles.filter(
+        (sparkle: SparkleType) => {
+          const delta = now - sparkle.createdAt;
+          console.log(delta);
+          return delta < 1000;
+          // return true;
+        }
+      );
       // console.log(sparkles);
       nextSparkles.push(sparkle);
 
@@ -105,10 +127,12 @@ const Sparkles = ({ color = DEFAULT_COLOR, children }) => {
     >
       {sparkles.map((sparkle) => (
         <Sparkle
+          id={sparkle.id}
           key={sparkle.id}
           color={sparkle.color}
           size={sparkle.size}
           style={sparkle.style}
+          createdAt={sparkle.createdAt}
         />
       ))}
       <div
@@ -123,17 +147,17 @@ const Sparkles = ({ color = DEFAULT_COLOR, children }) => {
       </div>
     </div>
   );
-};
+}
 
-function Sparkle({ color, size, style }) {
+function Sparkle(props: SparkleType) {
   return (
-    <div className={mainStyle.sparkleContainer} style={style}>
+    <div className={mainStyle.sparkleContainer} style={props.style}>
       <svg
         className={mainStyle.sparkle}
         xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
-        fill={color}
+        width={props.size}
+        height={props.size}
+        fill={props.color}
         viewBox="0 0 160 160"
       >
         <path
@@ -147,21 +171,24 @@ function Sparkle({ color, size, style }) {
 
 const AudioComponent = (props: AudioCompProps) => {
   const [currentAudioProgress, setCurrentAudioProgress] = useState(0);
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [mounted, setMounted] = useState(true);
 
   const playAudio = () => {
     if (audioRef.current !== null) {
       audioRef.current.play();
       const progressInterval = setInterval(() => {
-        const progress =
-          mounted &&
-          (audioRef.current.currentTime / audioRef.current.duration) *
-            100;
-        setCurrentAudioProgress(progress);
-        if (progress > 99) {
-          clearInterval(progressInterval);
-          setCurrentAudioProgress(0);
+        if (audioRef.current) {
+          const progress = mounted
+            ? (audioRef.current.currentTime /
+                audioRef.current.duration) *
+              100
+            : 0;
+          setCurrentAudioProgress(progress);
+          if (progress > 99) {
+            clearInterval(progressInterval);
+            setCurrentAudioProgress(0);
+          }
         }
       }, 50);
     }
@@ -484,7 +511,10 @@ export default function Page(props: any) {
             ))}
           </div>
           <div className={mainStyle.navContainer}>
-            <div className={mainStyle.navBox} onClick={prevActivity}>
+            <div
+              className={mainStyle.navBox}
+              onClick={() => prevActivity}
+            >
               Prev
             </div>
             <div className={mainStyle.navBox}>

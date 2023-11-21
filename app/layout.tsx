@@ -44,7 +44,10 @@ const CurrentUser = (props: CurrentUserProps) => {
             alt="user avatar"
           />
           <div className={mainStyle.userName}>{user.name}</div>
-          <div className={mainStyle.crossDelete} onClick={clearUser}>
+          <div
+            className={mainStyle.crossDelete}
+            onClick={() => clearUser}
+          >
             <div
               style={{
                 position: 'absolute',

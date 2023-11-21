@@ -3,4 +3,6 @@ export interface ActivityGroup{
     uuid:string;
     title:string;
     activities:string[]
+    thumb:string;
+    deleted:boolean;
 }

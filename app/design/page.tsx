@@ -90,17 +90,20 @@ export default function Page() {
     }, 3000);
   };
 
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const playAudio = () => {
     if (audioRef.current !== null) {
-      audioRef.current.play();
+      if (audioRef) audioRef.current.play();
       const progressInterval = setInterval(() => {
-        const progress =
-          (audioRef.current.currentTime / audioRef.current.duration) *
-          100;
-        setCurrentAudioProgress(progress);
-        if (progress > 98) clearInterval(progressInterval);
+        if (audioRef.current) {
+          const progress =
+            (audioRef.current.currentTime /
+              audioRef.current.duration) *
+            100;
+          setCurrentAudioProgress(progress);
+          if (progress > 98) clearInterval(progressInterval);
+        }
       }, 50);
     }
   };
@@ -275,7 +278,7 @@ export default function Page() {
               <div className={mainStyle.navContainer}>
                 <div
                   className={mainStyle.navBox}
-                  onClick={prevActivity}
+                  onClick={() => prevActivity}
                 >
                   Prev
                 </div>
@@ -285,7 +288,7 @@ export default function Page() {
                 </div>
                 <div
                   className={mainStyle.navBox}
-                  onClick={nextActivity}
+                  onClick={() => nextActivity}
                 >
                   Next
                 </div>

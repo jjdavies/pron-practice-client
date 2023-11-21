@@ -4,11 +4,17 @@ import DataContext from '../../data/DataContext';
 import mainStyle from '../../styles/Main.module.css';
 import Image from 'next/image';
 import moment from 'moment';
+import { CompletedSession } from '../../interface/CompletedSession';
 
-export function SessionCard(session) {
+interface SessionCardProps {
+  session: CompletedSession;
+  currentSessionRange: SessionRange;
+}
+
+function SessionCard(props: SessionCardProps) {
   const { uuid, useruuid, groupuuid, selections, timestamp } =
-    session.session;
-  const { currentSessionRange } = session;
+    props.session;
+  const currentSessionRange = props.currentSessionRange;
   const { userThumbs, activityGroups, loadActivityGroups } =
     useContext(DataContext);
   if (userThumbs.length === 0 || activityGroups.length === 0) {
@@ -79,7 +85,7 @@ export function SessionCard(session) {
         alt="relevant activity thumbnail"
       />
       <div className={mainStyle.resultsBoxes}>
-        {selections.map((sel) => (
+        {selections.map((sel: any) => (
           <div
             className={mainStyle.resultBox}
             style={{
@@ -118,7 +124,7 @@ export default function Page() {
 
   useEffect(() => {
     loadCompletedSessions();
-  }, []);
+  }, [loadCompletedSessions]);
 
   const selectSessionFilter = (filter: string) => {
     setCurrentSessionFilter(

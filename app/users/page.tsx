@@ -27,7 +27,9 @@ export default function Page() {
     setThumbPreview(image);
   };
 
-  const changeNewUserName = (e) => {
+  const changeNewUserName = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNewUserName(e.target.value);
   };
 
@@ -52,7 +54,7 @@ export default function Page() {
                     'Add Image'
                   ) : (
                     <Image
-                      src={thumbPreview}
+                      src={thumbPreview ? thumbPreview : ''}
                       width={80}
                       height={80}
                       alt="user thumb preview"
